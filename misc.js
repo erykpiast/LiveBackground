@@ -59,6 +59,14 @@ define(function() {
 			return Date.parse(now) + now.getMilliseconds();
 		};
 	}
+	
+	if(!window.performance) {
+		window.performance = { };
+	}
+	
+	if(!window.performance.now) {
+		window.performance.now = function() { return Date.now(); };
+	}
 
 	Array.prototype.indexOfObjectWith = function(searchElement /*, [from] */) {
 		if(this === void 0 || this === null)
