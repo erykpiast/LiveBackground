@@ -2,7 +2,7 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 	LiveBackgroundCreator = function(pr) {
 		var def = {
 			canvasHeight: 30,
-			canvasWidth: 30
+			canvasWidth: 40
 		};
 
 		var proto = this.proto = (pr ? {
@@ -20,7 +20,7 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 		this._elements = els;
 
 		this._keyboard = new Keyboard({
-			element: this.canvas.container,
+			element: $(document),
 			handlers: [
 				{
 					pt: 'LeftArrow',
@@ -107,6 +107,15 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 			}
 
 			return true;
+		},
+		getShapeObject: function() {
+			var spO = {
+			
+			};
+			
+			this._getShapePoints(spO);
+
+			return spO;
 		},
 	// internal >>
 		_createCanvas: function(h, w) {
@@ -349,7 +358,9 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 			
 			return this._setCurrentPoint(point);
 		},
-		_leftArrowPressHandler: function() {
+		_leftArrowPressHandler: function(e) {
+			if(e.target !== document.body) return false;
+
 			var nextX = this._currentPoint.x - 1,
 				nextY = this._currentPoint.y,
 				nextPoint = (nextX >= 0 ? this.canvas.points[nextY][nextX] : null);
@@ -360,7 +371,9 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 				return false;
 			}
 		},
-		_upArrowPressHandler: function() {
+		_upArrowPressHandler: function(e) {
+			if(e.target !== document.body) return false;
+
 			var nextX = this._currentPoint.x,
 				nextY = this._currentPoint.y - 1,
 				nextPoint = (nextY >= 0 ? this.canvas.points[nextY][nextX] : null);
@@ -371,7 +384,9 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 				return false;
 			}
 		},
-		_rightArrowPressHandler: function() {
+		_rightArrowPressHandler: function(e) {
+			if(e.target !== document.body) return false;
+
 			var nextX = this._currentPoint.x + 1,
 				nextY = this._currentPoint.y,
 				nextPoint = (nextX < this.canvas.points[nextY].length ? this.canvas.points[nextY][nextX] : null);
@@ -382,7 +397,9 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 				return false;
 			}
 		},
-		_downArrowPressHandler: function() {
+		_downArrowPressHandler: function(e) {
+			if(e.target !== document.body) return false;
+
 			var nextX = this._currentPoint.x,
 				nextY = this._currentPoint.y + 1,
 				nextPoint = (nextY < this.canvas.points.length ? this.canvas.points[nextY][nextX] : null);
@@ -393,7 +410,9 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 				return false;
 			}
 		},
-		_enterPressHandler: function() {
+		_enterPressHandler: function(e) {
+			if(e.target !== document.body) return false;
+
 			if(this._currentPoint) {
 				this.togglePoint(this._currentPoint);
 
@@ -408,6 +427,45 @@ define([ 'drawer', 'jquery', 'creator/keyboard', 'jqueryui', 'colorpicker', 'mis
 			if((input.prop('referenceObject') == 'point') && this._currentPoint) {
 				this._currentPoint.set(input.prop('referenceProperty'), input.attr('value'));
 			}
+		},
+		_getShapePoints: function(spO) {
+			var ps = this.canvas.points,
+				minY = 0, maxY = (this.canvas.height - 1),
+				minX = 0, maxX = (this.canvas.width - 1),
+				res = spO.points = [ ];
+
+			for(var i = 0, maxi = ps.length; i < maxi; i++) {
+				var row = ps[i];
+
+				for(var j = 0, maxj = ps.length; j < maxi; j++) {
+					var p = row[j];
+
+					if(p.checked) {
+						res.push(p);
+					
+						if(p.x > maxX) {
+							maxX = p.x;
+						}
+						
+						if(p.x < minX) {
+							minX = p.x;
+						}
+						
+						if(p.y > maxY) {
+							maxY = p.y;
+						}
+						
+						if(p.y < minY) {
+							minY = p.y;
+						}
+					}
+				}
+			}
+			
+			spO.width = (maxX - minX);
+			spO.hieght = (maxY - minY);
+			
+			return true;
 		}
 	// << internal
 	};
