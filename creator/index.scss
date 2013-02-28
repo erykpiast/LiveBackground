@@ -1,0 +1,54 @@
+@import "../../lib/mixins.scss";
+
+$size: 6px;
+
+#canvas {
+	height: $size*30;
+	width: $size*30;
+	@include user-select(none);
+	& > span {		
+		float: left;
+		&.checked {
+			& > span > span > span {
+				border-color: rgba(170, 170, 170, 1);
+				height: $size - 2;
+				width: $size - 2;
+			}
+		}
+		&.hover,
+		&:hover {
+			outline: 2px solid rgba(192, 20, 20, 0.5);	
+		}
+		& > span {
+			display: table;
+			height: $size;
+			width: $size;
+			& > span {
+				display: table-cell;
+				vertical-align: middle;
+				& > span {
+					display: block;
+					height: 0;
+					width: 0;
+					margin: auto;
+					border: 1px solid rgba(238, 238, 238, 1) {
+						radius: $size;
+					};
+				}
+			}
+		}
+	}
+}
+
+#ui {
+	& > fieldset {
+		float: left;
+		& > fieldset {
+			margin-bottom: 1em;
+			padding: 1em;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
