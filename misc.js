@@ -1,12 +1,32 @@
-define(function() {
-	window.parseInt0 = function(obj) {
+define([ 'underscore', 'jquery' ], function() {
+	_.mixin({
+		mustacheTemplate: function(t) {
+			var oldTemplateSettings = _.templateSettings,
+				tplFn;
 
-		return (isNaN(parseInt(obj)) ? 0 : parseInt(obj));
+			_.templateSettings = {
+				interpolate : /\{\{(.+?)\}\}/g
+			};
+			
+			tplFn = _.template(t);
+
+			_.templateSettings = oldTemplateSettings;
+
+			return tplFn;
+		}
+	})
+
+
+	window.parseInt0 = function() {
+		var parsed = parseInt.apply(window, arguments);
+
+		return (isNaN(parsed) ? 0 : parsed);
 	};
 
-	window.parseFloat0 = function(obj) {
+	window.parseFloat0 = function() {
+		var parsed = parseFloat.apply(window, arguments);
 
-		return (isNaN(parseFloat(obj)) ? 0 : parseFloat(obj));
+		return (isNaN(parsed) ? 0 : parsed);
 	};
 
 	if(!Function.prototype.bind) {
@@ -59,13 +79,15 @@ define(function() {
 			return Date.parse(now) + now.getMilliseconds();
 		};
 	}
-	
+
 	if(!window.performance) {
 		window.performance = { };
 	}
-	
+
 	if(!window.performance.now) {
-		window.performance.now = function() { return Date.now(); };
+		window.performance.now = function() {
+			return Date.now();
+		}
 	}
 
 	Array.prototype.indexOfObjectWith = function(searchElement /*, [from] */) {
@@ -142,4 +164,54 @@ define(function() {
 
 		return duplicates;
 	};
+
+	Array.create = function(pseudo) {
+		if((pseudo === null) || pseudo === undefined) {
+			return [ ];
+		} else if(Object.isString(pseudo)) {
+			return [ pseudo ];
+		} else  {
+			var a = Array.prototype.slice.call(pseudo);
+			
+			if(a.length != pseudo.length) {
+				return [ pseudo ];
+			} else {
+				return a;
+			}
+		}
+	};
+
+	Array.dim = function(/* dimensions */) {
+		var a = [ ];
+
+		if(arguments.length) {
+			for(var i = 0, maxi = arguments[0]; i < maxi; i++) {
+				a[i] = Array.dim.apply(null, Array.prototype.slice.call(arguments, 1));	
+			}
+		}
+
+		return a;
+	};
+
+	Array.clear = function(array /*, value */) {
+		var value = ((arguments[1] !== undefined) ? arguments[1] : null);
+
+		return array.filter(function(el) { if(el !== value) return true; });
+	};
+
+	$.isString = function(obj) {
+
+		return ((typeof(obj) == "string") || (obj instanceof String));
+	};
+
+	$.isNumber = function(obj) {
+
+		return ((typeof(obj) == "number") || (obj instanceof Number));
+	};
+
+	window.alt = function(variable, alternatives) {
+		return Array.prototype.some.call(alternatives, function(alt) {
+			return (variable == alt);
+		});
+	}
 });

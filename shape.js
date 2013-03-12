@@ -1,4 +1,4 @@
-define([ 'misc' ], function() {
+define([ 'misc', 'color' ], function() {
 	Shape = function(pr) {
 		/*pr = { // shape prototype
 			// R - required
@@ -105,8 +105,8 @@ define([ 'misc' ], function() {
 				hideTime: (pr.hideTime !== undefined ? parseInt0(pr.hideTime) : def.hideTime),
 				hideDelay: (pr.hideDelay !== undefined ? parseInt0(pr.hideDelay) : def.hideDelay),
 				hideEasing: (pr.hideEasing ? pr.hideEasing.toString() : def.hideEasing),
-				strokeColor: (pr.strokeColor ? pr.strokeColor.toString() : def.strokeColor),
-				fillColor: (pr.fillColor !== undefined ? (pr.fillColor !== null ? pr.fillColor.toString() : null) : def.fillColor)
+				strokeColor: (pr.strokeColor ? (new Color(pr.strokeColor.toString())).rgba() : def.strokeColor),
+				fillColor: (pr.fillColor !== undefined ? (pr.fillColor !== null ? (new Color(pr.fillColor.toString())).rgba() : null) : def.fillColor)
 			};
 		}
 	// << internal

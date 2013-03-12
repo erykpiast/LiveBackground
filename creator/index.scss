@@ -41,13 +41,78 @@ $size: 6px;
 }
 
 #ui {
+	@include user-select(none);
+	cursor: default;
 	& > fieldset {
 		float: left;
+		position: relative;
+		z-index: 0;
 		& > fieldset {
-			margin-bottom: 1em;
-			padding: 1em;
+			border: {
+				bottom: none;
+				left: none;
+				right: none;
+			};
+			text-align: right;
 			&:last-child {
 				margin-bottom: 0;
+			}
+			& > legend {
+				text-align: left;
+			}
+			& > div {
+				margin: 1em auto;
+			}
+		}
+		input[type="text"] {
+			cursor: text;
+		}
+		input[type="text"] {
+			width: 5em;
+		}
+		select {
+			width: 5.48em;
+		}
+		label,
+		input[type="button"],
+		button {
+			cursor: pointer;
+		}
+		textarea {
+			height: 487px;
+			width: 357px;
+		}
+		&.ui-floating-toolbar {
+			border: none;
+			padding: 0;
+			position: absolute;
+			& > button {
+				float: left;
+				&:first-child {
+					border-top-right-radius: 0px;
+					border-bottom-right-radius: 0px;
+					margin-right: 0;
+				}
+				&:last-child {
+					border-top-left-radius: 0px;
+					border-bottom-left-radius: 0px;
+					margin-left: 0;
+				}
+				&.ui-button-icon-only {
+					&:hover {
+						position: relative;
+						&:after {
+							content: attr(value);
+							box-shadow: 0 0 5px #888;
+							display: block;
+							position: absolute;
+							top: 100%;
+						}
+					}
+				}
+			}
+			&#extrapolate_properties_toolbar {
+				background-color: #FFF;
 			}
 		}
 	}
