@@ -796,8 +796,12 @@ define([ 'text!creator/templates/ui.tpl', 'text!creator/templates/point.tpl', 'd
 					point[prop] = undefined;
 				}
 
-				var shapeSetting = this._shapeSettings[prop];
-				val = (typeof shapeSetting != 'undefined') ? shapeSetting : '';
+				if(point.checked || (prop != 'strokeColor')) {
+					var shapeSetting = this._shapeSettings[prop];
+					val = (typeof shapeSetting != 'undefined') ? shapeSetting : '';
+				} else {
+					val = '';
+				}
 			}
 
 			switch(prop) {
@@ -844,5 +848,5 @@ define([ 'text!creator/templates/ui.tpl', 'text!creator/templates/point.tpl', 'd
 	// << internal
 	};
 
-	return LiveBackgroundCreator;
+	return ShapeCreator;
 });
